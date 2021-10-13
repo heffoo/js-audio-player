@@ -1,0 +1,55 @@
+.App {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  margin-top: 30px;
+}
+
+.player {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  width: 600px;
+  height: 400px;
+  box-shadow: 0px 1px 10px 0px rgba(34, 60, 80, 0.2);
+  background: linear-gradient(137deg, rgba(216,220,249,0.3225665266106442) 0%, rgba(255,255,255,1) 57%);
+  
+}
+
+.control-button {
+  background-color: transparent;
+  border: 0;
+  outline: 0;
+  cursor: pointer;
+  transform: scale(3);
+  margin: 20px;
+  &:hover {
+    transform: scale(3.3);
+  }
+}
+
+.progressbar {
+  height: 10px;
+  width: 600px;
+  background-color: rgb(240, 238, 238);
+  position: relative;
+}
+
+.progress {
+  height: 10px;
+  background-color: lightblue;
+  z-index: 2;
+}
+
+.time {
+  position: absolute;
+  top: -25px;
+  display: flex;
+}
+
+.endTime {
+  position: absolute;
+  top: -25px;
+  right: 0;
+}

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import "./App.css";
+import "./App.scss";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -7,14 +7,17 @@ function App() {
   const tracks = [
     {
       title: "HIM - Pretending",
+      cover: "./assets/pretending_cover.png",
       src: "./audio/pretending.mp3",
     },
     {
       title: "Pain - Shut Your Mouth",
+      cover: "./assets/pain.png",
       src: "./audio/pain.mp3",
     },
     {
       title: "Crazytown - Butterfly",
+      cover: "./assets/butterfly.png",
       src: "./audio/butterfly.mp3",
     },
   ];
@@ -23,8 +26,11 @@ function App() {
 
   const [play, setPlay] = useState("pause");
   const [progressBarPercent, setProgressBarPercent] = useState(0);
+  const [progressCounter, setProgressCounter] = useState("00:00");
+  const [duration, setDuration] = useState("00:00");
 
   const audio = useRef();
+  const mounted = useRef(false);
 
   function playTrack() {
     setPlay("play");
@@ -35,8 +41,6 @@ function App() {
     setPlay("pause");
     audio.current.pause();
   }
-
-  const mounted = useRef(false);
 
   useEffect(() => {
     if (!mounted.current) {
@@ -73,38 +77,69 @@ function App() {
     audio.current.currentTime = (clickX / barWidth) * duration;
   }
 
-  return <div className="App">
+  function formateTime(minutes, seconds) {
+    return [minutes.toString().padStart(2, "0"), seconds.toString().padStart(2, "0")].join(":");
+  }
+
+  function counter(e) {
+    let timestamp = e.target.currentTime;
+    let minutes = Math.floor(timestamp / 60);
+    let seconds = Math.floor(timestamp % 60);
+
+    setProgressCounter(formateTime(minutes, seconds));
+  }
+  
+  function calculateDuration(e) {
+    let duration = e.target.duration;
+    
+    let minutes = Math.floor(duration / 60);
+    let seconds = Math.floor(duration % 60);
+
+    setDuration(formateTime(minutes, seconds));
+  }
+  
+  return (
+    <div className="App">
       <div className="player">
-        <label>{currentTrack.title}</label>
+        <label>Current track: {currentTrack.title}</label>
+        <img style={{width: 200}} src={currentTrack.cover} alt="cover"/>
         <div className="buttons">
           <button className="control-button" onClick={prevTrack}>
-            <FontAwesomeIcon icon="chevron-circle-left" />
+            <FontAwesomeIcon icon="backward" />
           </button>
           {play === "pause" ? (
             <button className="control-button" onClick={playTrack}>
-              play
+              <FontAwesomeIcon icon="play" />
             </button>
           ) : (
             <button className="control-button" onClick={pauseTrack}>
-              pause
+              <FontAwesomeIcon icon="pause" />
             </button>
           )}
           <button className="control-button" onClick={nextTrack}>
-            <FontAwesomeIcon icon="chevron-circle-right" />
+            <FontAwesomeIcon icon="forward" />
           </button>
         </div>
         <audio
           ref={audio}
           className="audio1"
           src={currentTrack.src}
-          onTimeUpdate={progressBar}
+          onTimeUpdate={(e) => {
+            progressBar();
+            counter(e);
+          }}
+          onLoadedMetadata={(e) => calculateDuration(e)}
           onEnded={nextTrack}
         />
+
         <div className="progressbar" onClick={rewindSong}>
+          <div className="time">{progressCounter}</div>
+          <div className="endTime">{duration}</div>
           <div className="progress" style={{ width: progressBarPercent + "%" }}></div>
         </div>
       </div>
     </div>
+  );
 }
 
 export default App;
