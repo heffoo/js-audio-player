@@ -1,21 +1,27 @@
 import React, { useState, useRef, useEffect } from "react";
-import "./App.scss";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import "./App.scss";
 
 function App() {
   const tracks = [
     {
+      singer: "HIM",
+      track: "Pretending",
       title: "HIM - Pretending",
       cover: "./assets/pretending_cover.png",
       src: "./audio/pretending.mp3",
     },
     {
+      singer: "Pain",
+      track: "Shut Your Mouth",
       title: "Pain - Shut Your Mouth",
       cover: "./assets/pain.png",
       src: "./audio/pain.mp3",
     },
     {
+      singer: "Crazytown",
+      track: "Butterfly",
       title: "Crazytown - Butterfly",
       cover: "./assets/butterfly.png",
       src: "./audio/butterfly.mp3",
@@ -88,21 +94,19 @@ function App() {
 
     setProgressCounter(formateTime(minutes, seconds));
   }
-  
+
   function calculateDuration(e) {
     let duration = e.target.duration;
-    
+
     let minutes = Math.floor(duration / 60);
     let seconds = Math.floor(duration % 60);
 
     setDuration(formateTime(minutes, seconds));
   }
-  
-  return (
-    <div className="App">
+
+  return <div className="App">
       <div className="player">
-        <label>Current track: {currentTrack.title}</label>
-        <img style={{width: 200}} src={currentTrack.cover} alt="cover"/>
+        <img style={{ width: 200 }} src={currentTrack.cover} alt="cover" />
         <div className="buttons">
           <button className="control-button" onClick={prevTrack}>
             <FontAwesomeIcon icon="backward" />
@@ -120,6 +124,10 @@ function App() {
             <FontAwesomeIcon icon="forward" />
           </button>
         </div>
+        <div className="title">
+          <label className="singer">{currentTrack.singer}</label>
+          <label>{currentTrack.track}</label>
+        </div>
         <audio
           ref={audio}
           className="audio1"
@@ -131,7 +139,6 @@ function App() {
           onLoadedMetadata={(e) => calculateDuration(e)}
           onEnded={nextTrack}
         />
-
         <div className="progressbar" onClick={rewindSong}>
           <div className="time">{progressCounter}</div>
           <div className="endTime">{duration}</div>
@@ -139,7 +146,6 @@ function App() {
         </div>
       </div>
     </div>
-  );
 }
 
 export default App;
