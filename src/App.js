@@ -102,7 +102,7 @@ function App() {
     <div className="App">
       <div className="player">
         <label>Current track: {currentTrack.title}</label>
-        <img style={{width: 200}} src={currentTrack.cover}/>
+        <img style={{width: 200}} src={currentTrack.cover} alt="cover"/>
         <div className="buttons">
           <button className="control-button" onClick={prevTrack}>
             <FontAwesomeIcon icon="backward" />
