@@ -16,6 +16,11 @@
   background: linear-gradient(137deg, rgba(216, 220, 249, 0.3225665266106442) 0%, rgba(255, 255, 255, 1) 57%);
 }
 
+.progress-buttons__button {
+  margin: 0 5px;
+  background-color: transparent;
+}
+
 .control-button {
   background-color: transparent;
   border: 0;
@@ -45,7 +50,7 @@
 .time {
   position: absolute;
   top: 15px;
-  margin:  0 5px 5px 5px;
+  margin: 0 5px 5px 5px;
 }
 
 .endTime {
@@ -60,4 +65,9 @@
 
 .singer {
   color: gray;
+}
+
+.progress-buttons {
+  display: flex;
+  align-self: flex-end;
 }

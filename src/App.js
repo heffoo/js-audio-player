@@ -34,6 +34,8 @@ function App() {
   const [progressBarPercent, setProgressBarPercent] = useState(0);
   const [progressCounter, setProgressCounter] = useState("00:00");
   const [duration, setDuration] = useState("00:00");
+  const [muted, setMuted] = useState(false);
+  const [repeat, setRepeat] = useState(false);
 
   const audio = useRef();
   const mounted = useRef(false);
@@ -104,7 +106,8 @@ function App() {
     setDuration(formateTime(minutes, seconds));
   }
 
-  return <div className="App">
+  return (
+    <div className="App">
       <div className="player">
         <img style={{ width: 200 }} src={currentTrack.cover} alt="cover" />
         <div className="buttons">
@@ -138,7 +141,17 @@ function App() {
           }}
           onLoadedMetadata={(e) => calculateDuration(e)}
           onEnded={nextTrack}
+          muted={muted}
+          loop={repeat}
         />
+        <div className="progress-buttons">
+          <button className="progress-buttons__button" onClick={() => setMuted(!muted)}>
+            <FontAwesomeIcon icon={muted ? "volume-mute" : "volume-down"} />
+          </button>
+          <button className="progress-buttons__button" onClick={() => setRepeat(!repeat)}>
+            {repeat ? "no-repeat" : "repeat"}
+          </button>
+        </div>
         <div className="progressbar" onClick={rewindSong}>
           <div className="time">{progressCounter}</div>
           <div className="endTime">{duration}</div>
@@ -146,6 +159,7 @@ function App() {
         </div>
       </div>
     </div>
+  );
 }
 
 export default App;
