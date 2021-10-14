@@ -26,10 +26,13 @@
   border: 0;
   outline: 0;
   cursor: pointer;
-  transform: scale(3);
+  transform: scale(4);
   margin: 20px;
   &:hover {
-    transform: scale(3.3);
+    transform: scale(4.3);
+  }
+  &:nth-child(2) {
+    margin-right: 15px;
   }
 }
 
@@ -70,4 +73,14 @@
 .progress-buttons {
   display: flex;
   align-self: flex-end;
+}
+
+.progress-buttons__button {
+  border: 0;
+  transform: scale(2);
+  margin: 0 5px;
+  cursor: pointer;
+  &:hover {
+    transform: scale(2.2);
+  }
 }
