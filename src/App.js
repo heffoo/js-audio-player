@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { MdRepeat, MdRepeatOne } from "react-icons/md";
+import { GoUnmute, GoMute } from "react-icons/go";
+import { IoPlay, IoPlayForward, IoPlayBack, IoPause } from "react-icons/io5";
 
 import "./App.scss";
 
@@ -26,6 +28,20 @@ function App() {
       cover: "./assets/butterfly.png",
       src: "./audio/butterfly.mp3",
     },
+    {
+      singer: "Dreadful Shadows",
+      track: "Futility",
+      title: "Dreadful Shadows - Futility",
+      cover: "./assets/ds.png",
+      src: "./audio/futility.mp3",
+    },
+    {
+      singer: "Soundgarden",
+      track: "Black Hole Sun",
+      title: "Soundgarden - Black Hole Sun",
+      cover: "./assets/soundgarden.png",
+      src: "./audio/soundgarden.mp3",
+    },
   ];
 
   const [currentTrack, setCurrentTrack] = useState(tracks[0]);
@@ -34,6 +50,8 @@ function App() {
   const [progressBarPercent, setProgressBarPercent] = useState(0);
   const [progressCounter, setProgressCounter] = useState("00:00");
   const [duration, setDuration] = useState("00:00");
+  const [muted, setMuted] = useState(false);
+  const [repeat, setRepeat] = useState(false);
 
   const audio = useRef();
   const mounted = useRef(false);
@@ -58,14 +76,14 @@ function App() {
 
   function prevTrack() {
     let index = tracks.findIndex((el) => el.title === currentTrack.title);
-    setCurrentTrack(index === 0 ? tracks[2] : tracks[index - 1]); // потом пофиксить (чтоб было -1, а не -2, разобраться почему так ваще)
+    setCurrentTrack(index === 0 ? tracks[4] : tracks[index - 1]);
 
     audio.current.load();
   }
 
   function nextTrack() {
     let index = tracks.findIndex((el) => el.title === currentTrack.title);
-    setCurrentTrack(index > tracks.length - 2 ? tracks[0] : tracks[index + 1]); // потом пофиксить (чтоб было -1, а не -2, разобраться почему так ваще)
+    setCurrentTrack(index > tracks.length - 2 ? tracks[0] : tracks[index + 1]);
 
     audio.current.load();
   }
@@ -109,19 +127,19 @@ function App() {
         <img style={{ width: 200 }} src={currentTrack.cover} alt="cover" />
         <div className="buttons">
           <button className="control-button" onClick={prevTrack}>
-            <FontAwesomeIcon icon="backward" />
+            <IoPlayBack />
           </button>
           {play === "pause" ? (
             <button className="control-button" onClick={playTrack}>
-              <FontAwesomeIcon icon="play" />
+              <IoPlay />
             </button>
           ) : (
             <button className="control-button" onClick={pauseTrack}>
-              <FontAwesomeIcon icon="pause" />
+              <IoPause />
             </button>
           )}
           <button className="control-button" onClick={nextTrack}>
-            <FontAwesomeIcon icon="forward" />
+            <IoPlayForward />
           </button>
         </div>
         <div className="title">
@@ -138,7 +156,17 @@ function App() {
           }}
           onLoadedMetadata={(e) => calculateDuration(e)}
           onEnded={nextTrack}
+          muted={muted}
+          loop={repeat}
         />
+        <div className="progress-buttons">
+          <button className="progress-buttons__button" onClick={() => setMuted(!muted)}>
+            {muted ? <GoMute /> : <GoUnmute />}
+          </button>
+          <button className="progress-buttons__button" onClick={() => setRepeat(!repeat)}>
+            {repeat ? <MdRepeatOne /> : <MdRepeat />}
+          </button>
+        </div>
         <div className="progressbar" onClick={rewindSong}>
           <div className="time">{progressCounter}</div>
           <div className="endTime">{duration}</div>

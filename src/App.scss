@@ -16,15 +16,23 @@
   background: linear-gradient(137deg, rgba(216, 220, 249, 0.3225665266106442) 0%, rgba(255, 255, 255, 1) 57%);
 }
 
+.progress-buttons__button {
+  margin: 0 5px;
+  background-color: transparent;
+}
+
 .control-button {
   background-color: transparent;
   border: 0;
   outline: 0;
   cursor: pointer;
-  transform: scale(3);
+  transform: scale(4);
   margin: 20px;
   &:hover {
-    transform: scale(3.3);
+    transform: scale(4.3);
+  }
+  &:nth-child(2) {
+    margin-right: 15px;
   }
 }
 
@@ -45,7 +53,7 @@
 .time {
   position: absolute;
   top: 15px;
-  margin:  0 5px 5px 5px;
+  margin: 0 5px 5px 5px;
 }
 
 .endTime {
@@ -60,4 +68,19 @@
 
 .singer {
   color: gray;
+}
+
+.progress-buttons {
+  display: flex;
+  align-self: flex-end;
+}
+
+.progress-buttons__button {
+  border: 0;
+  transform: scale(2);
+  margin: 0 5px;
+  cursor: pointer;
+  &:hover {
+    transform: scale(2.2);
+  }
 }
