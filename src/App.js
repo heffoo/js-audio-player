@@ -2,56 +2,55 @@ import React, { useState, useRef, useEffect } from "react";
 import { MdRepeat, MdRepeatOne } from "react-icons/md";
 import { GoUnmute, GoMute } from "react-icons/go";
 import { IoPlay, IoPlayForward, IoPlayBack, IoPause } from "react-icons/io5";
+import NoCover from "./assets/No_cover.png";
 
 import "./App.scss";
-
+const tracks = [
+  {
+    singer: "HIM",
+    track: "Pretending",
+    title: "HIM - Pretending",
+    cover: "./assets/pretending_cover.png",
+    src: "./audio/pretending.mp3",
+  },
+  {
+    singer: "Pain",
+    track: "Shut Your Mouth",
+    title: "Pain - Shut Your Mouth",
+    cover: "./assets/pain.png",
+    src: "./audio/pain.mp3",
+  },
+  {
+    singer: "Crazytown",
+    track: "Butterfly",
+    title: "Crazytown - Butterfly",
+    cover: "./assets/butterfly.png",
+    src: "./audio/butterfly.mp3",
+  },
+  {
+    singer: "Dreadful Shadows",
+    track: "Futility",
+    title: "Dreadful Shadows - Futility",
+    cover: "./assets/ds.png",
+    src: "./audio/futility.mp3",
+  },
+  {
+    singer: "Soundgarden",
+    track: "Black Hole Sun",
+    title: "Soundgarden - Black Hole Sun",
+    cover: "./assets/soundgarden.png",
+    src: "./audio/soundgarden.mp3",
+  },
+];
 function App() {
-  const tracks = [
-    {
-      singer: "HIM",
-      track: "Pretending",
-      title: "HIM - Pretending",
-      cover: "./assets/pretending_cover.png",
-      src: "./audio/pretending.mp3",
-    },
-    {
-      singer: "Pain",
-      track: "Shut Your Mouth",
-      title: "Pain - Shut Your Mouth",
-      cover: "./assets/pain.png",
-      src: "./audio/pain.mp3",
-    },
-    {
-      singer: "Crazytown",
-      track: "Butterfly",
-      title: "Crazytown - Butterfly",
-      cover: "./assets/butterfly.png",
-      src: "./audio/butterfly.mp3",
-    },
-    {
-      singer: "Dreadful Shadows",
-      track: "Futility",
-      title: "Dreadful Shadows - Futility",
-      cover: "./assets/ds.png",
-      src: "./audio/futility.mp3",
-    },
-    {
-      singer: "Soundgarden",
-      track: "Black Hole Sun",
-      title: "Soundgarden - Black Hole Sun",
-      cover: "./assets/soundgarden.png",
-      src: "./audio/soundgarden.mp3",
-    },
-  ];
-
   const [currentTrack, setCurrentTrack] = useState(tracks[0]);
-
   const [play, setPlay] = useState("pause");
   const [progressBarPercent, setProgressBarPercent] = useState(0);
   const [progressCounter, setProgressCounter] = useState("00:00");
   const [duration, setDuration] = useState("00:00");
   const [muted, setMuted] = useState(false);
   const [repeat, setRepeat] = useState(false);
+  const [popupShow, setPopupShow] = useState(false);
 
   const audio = useRef();
   const mounted = useRef(false);
@@ -76,7 +75,9 @@ function App() {
 
   function prevTrack() {
     let index = tracks.findIndex((el) => el.title === currentTrack.title);
-    setCurrentTrack(index === 0 ? tracks[4] : tracks[index - 1]);
+    setCurrentTrack(
+      index === 0 ? tracks[tracks.length - 1] : tracks[index - 1]
+    );
 
     audio.current.load();
   }
@@ -102,7 +103,10 @@ function App() {
   }
 
   function formateTime(minutes, seconds) {
-    return [minutes.toString().padStart(2, "0"), seconds.toString().padStart(2, "0")].join(":");
+    return [
+      minutes.toString().padStart(2, "0"),
+      seconds.toString().padStart(2, "0"),
+    ].join(":");
   }
 
   function counter(e) {
@@ -122,8 +126,40 @@ function App() {
     setDuration(formateTime(minutes, seconds));
   }
 
+  function addFile(e) {
+    const trackName = e.target.files[0].name.split("-");
+    tracks.push({
+      singer: trackName[0],
+      track: trackName[1],
+      title: trackName,
+      cover: NoCover,
+      src: URL.createObjectURL(e.target.files[0]),
+    });
+    setPopupShow(true);
+  }
+
+  function Popup() {
+    setTimeout(() => {
+      setPopupShow(false);
+    }, 3000);
+
+    return <div id="popup" className="popup">
+        Песня в очереди
+      </div>
+  }
+
   return <div className="App">
+      {popupShow && <Popup />}
       <div className="player">
+        <label class="custom-file-upload">
+          Добавить песню
+          <input
+            type="file"
+            accept="audio/mp3"
+            id="inputElement"
+            onChange={(e) => addFile(e)}
+          />
+        </label>
         <img style={{ width: 200 }} src={currentTrack.cover} alt="cover" />
         <div className="buttons">
           <button className="control-button" onClick={prevTrack}>
@@ -144,7 +180,7 @@ function App() {
         </div>
         <div className="title">
           <label className="singer">{currentTrack.singer}</label>
-          <label>{currentTrack.track}</label>
+          <label>{currentTrack.track.replace(".mp3", "")}</label>
         </div>
         <audio
           ref={audio}
@@ -160,17 +196,26 @@ function App() {
           loop={repeat}
         />
         <div className="progress-buttons">
-          <button className="progress-buttons__button" onClick={() => setMuted(!muted)}>
+          <button
+            className="progress-buttons__button"
+            onClick={() => setMuted(!muted)}
+          >
             {muted ? <GoMute /> : <GoUnmute />}
           </button>
-          <button className="progress-buttons__button" onClick={() => setRepeat(!repeat)}>
+          <button
+            className="progress-buttons__button"
+            onClick={() => setRepeat(!repeat)}
+          >
             {repeat ? <MdRepeatOne /> : <MdRepeat />}
           </button>
         </div>
         <div className="progressbar" onClick={rewindSong}>
           <div className="time">{progressCounter}</div>
           <div className="endTime">{duration}</div>
-          <div className="progress" style={{ width: progressBarPercent + "%" }}></div>
+          <div
+            className="progress"
+            style={{ width: progressBarPercent + "%" }}
+          ></div>
         </div>
       </div>
     </div>
